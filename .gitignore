@@ -1,6 +1,0 @@
-# Ignore everything
-*
-
-# Except main.cpp
-!main.cpp
-!readme.md
