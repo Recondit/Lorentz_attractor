@@ -1,13 +1,28 @@
 #include <SFML/Graphics.hpp>
+#include <cmath>
+
+// Lorentz system parameters
+const float sigma = 10.0f;
+const float rho = 28.0f;
+const float beta = 8.0f / 3.0f;
+
+// Particle structure
+struct Particle {
+    sf::Vector3f position;
+    sf::Color color;
+};
 
 int main() {
-    // Create a window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Window");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Lorentz Butterfly Simulation");
 
-    // Create a circle shape
-    sf::CircleShape circle(50.0f);
-    circle.setFillColor(sf::Color::Blue);
-    circle.setPosition(375.0f, 275.0f); // Center the circle
+    // Create particles
+    const int numParticles = 1000;
+    std::vector<Particle> particles(numParticles);
+
+    for (auto& particle : particles) {
+        particle.position = sf::Vector3f(rand() % 800, rand() % 600, rand() % 600);
+        particle.color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
+    }
 
     // Main loop
     while (window.isOpen()) {
@@ -17,11 +32,38 @@ int main() {
                 window.close();
         }
 
-        // Draw the circle
+        // Update particle positions using Lorentz equations
+        for (auto& particle : particles) {
+            float x = particle.position.x;
+            float y = particle.position.y;
+            float z = particle.position.z;
+
+            float dx = sigma * (y - x);
+            float dy = x * (rho - z) - y;
+            float dz = x * y - beta * z;
+
+            particle.position.x += dx * 0.005;
+            particle.position.y += dy * 0.005;
+            particle.position.z += dz * 0.005;
+        }
+
+        // Draw particles with rotation around the center
         window.clear();
-        window.draw(circle);
+
+        for (const auto& particle : particles) {
+            sf::CircleShape circle(2);
+
+            // Calculate rotated position around the center of the screen
+            float rotatedX = particle.position.x + window.getSize().x / 2;
+            float rotatedY = particle.position.y + window.getSize().y / 2;
+
+            circle.setPosition(rotatedX, rotatedY);
+            circle.setFillColor(particle.color);
+            window.draw(circle);
+        }
+
         window.display();
     }
-    printf("Hello World!\n");
+
     return 0;
 }
