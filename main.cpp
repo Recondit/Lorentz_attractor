@@ -1,30 +1,42 @@
 #include <SFML/Graphics.hpp>
-#include <cmath>
+#include <deque>
 
-// Lorentz system parameters
-const float sigma = 10.0f;
-const float rho = 28.0f;
-const float beta = 8.0f / 3.0f;
+class LorenzAttractor {
+public:
+    float x, y, z;
+    float sigma, rho, beta;
 
-// Particle structure
-struct Particle {
-    sf::Vector3f position;
-    sf::Color color;
+    LorenzAttractor() : x(1.0), y(0.0), z(0.0), sigma(10.0), rho(28.0), beta(8.0 / 3.0) {}
+
+    void update(float dt) {
+        float dx = sigma * (y - x);
+        float dy = x * (rho - z) - y;
+        float dz = x * y - beta * z;
+
+        x += dx * dt;
+        y += dy * dt;
+        z += dz * dt;
+    }
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Lorentz Butterfly Simulation");
+    const int windowWidth = 800;
+    const int windowHeight = 600;
+    const float trailInterval = 0.05f; // Add a point to the trail every 0.1 seconds
 
-    // Create particles
-    const int numParticles = 1000;
-    std::vector<Particle> particles(numParticles);
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
+    window.setFramerateLimit(60);
 
-    for (auto& particle : particles) {
-        particle.position = sf::Vector3f(rand() % 800, rand() % 600, rand() % 600);
-        particle.color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-    }
+    sf::CircleShape particle(2.0f);
+    particle.setFillColor(sf::Color::Red);
 
-    // Main loop
+    LorenzAttractor attractor;
+
+    std::deque<sf::Vector2f> trail; // Trail to store particle positions
+
+    sf::Clock clock; // SFML clock to measure elapsed time
+    float elapsedTime = 0.0f;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -32,34 +44,28 @@ int main() {
                 window.close();
         }
 
-        // Update particle positions using Lorentz equations
-        for (auto& particle : particles) {
-            float x = particle.position.x;
-            float y = particle.position.y;
-            float z = particle.position.z;
+        float dt = clock.restart().asSeconds(); // Restart the clock and get the elapsed time
 
-            float dx = sigma * (y - x);
-            float dy = x * (rho - z) - y;
-            float dz = x * y - beta * z;
+        attractor.update(dt);
 
-            particle.position.x += dx * 0.005;
-            particle.position.y += dy * 0.005;
-            particle.position.z += dz * 0.005;
+        particle.setPosition(
+            windowWidth / 2 + attractor.x * 9,
+            windowHeight / 2 - attractor.y * 9
+        );
+
+        elapsedTime += dt;
+
+        if (elapsedTime >= trailInterval) {
+            trail.push_front(particle.getPosition());
+            elapsedTime = 0.0f; // Reset the elapsed time
         }
 
-        // Draw particles with rotation around the center
         window.clear();
 
-        for (const auto& particle : particles) {
-            sf::CircleShape circle(2);
-
-            // Calculate rotated position around the center of the screen
-            float rotatedX = particle.position.x + window.getSize().x / 2;
-            float rotatedY = particle.position.y + window.getSize().y / 2;
-
-            circle.setPosition(rotatedX, rotatedY);
-            circle.setFillColor(particle.color);
-            window.draw(circle);
+        // Draw the trail
+        for (const auto& point : trail) {
+            particle.setPosition(point);
+            window.draw(particle);
         }
 
         window.display();
