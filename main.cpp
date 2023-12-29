@@ -1,42 +1,39 @@
 #include <SFML/Graphics.hpp>
-#include <deque>
+#include <vector>
 
-class LorenzAttractor {
-public:
-    float x, y, z;
-    float sigma, rho, beta;
+float sigma = 10.0;
+float rho = 28.0;
+float beta = 8.0 / 3.0;
 
-    LorenzAttractor() : x(1.0), y(0.0), z(0.0), sigma(10.0), rho(28.0), beta(8.0 / 3.0) {}
-
-    void update(float dt) {
-        float dx = sigma * (y - x);
-        float dy = x * (rho - z) - y;
-        float dz = x * y - beta * z;
-
-        x += dx * dt;
-        y += dy * dt;
-        z += dz * dt;
-    }
+struct Particle {
+    sf::Vector3f position;
+    sf::Color color;
+    sf::VertexArray path;
 };
 
 int main() {
-    const int windowWidth = 800;
-    const int windowHeight = 600;
-    const float trailInterval = 0.05f; // Add a point to the trail every 0.1 seconds
-
+    // Create a window
+    const int windowWidth = 1600;
+    const int windowHeight = 900;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
-    window.setFramerateLimit(60);
 
-    sf::CircleShape particle(2.0f);
-    particle.setFillColor(sf::Color::Red);
+    // Create particles
+    const int numParticles = 100; // Adjust the number of particles as needed
+    std::vector<Particle> particles(numParticles);
 
-    LorenzAttractor attractor;
+    // Initialize particles with different initial positions and create their paths
+    for (int i = 0; i < numParticles; ++i) {
+        particles[i].position.x = static_cast<float>(rand() % 75 - 5);
+        particles[i].position.y = static_cast<float>(rand() % 75 - 5);
+        particles[i].position.z = static_cast<float>(rand() % 75 - 5);
 
-    std::deque<sf::Vector2f> trail; // Trail to store particle positions
+        particles[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
 
-    sf::Clock clock; // SFML clock to measure elapsed time
-    float elapsedTime = 0.0f;
+        particles[i].path.setPrimitiveType(sf::LineStrip);
+        particles[i].path.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18), particles[i].color));
+    }
 
+    // Main loop
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -44,28 +41,39 @@ int main() {
                 window.close();
         }
 
-        float dt = clock.restart().asSeconds(); // Restart the clock and get the elapsed time
+        // Update particles
+        for (int i = 0; i < numParticles; ++i) {
+            float x = particles[i].position.x;
+            float y = particles[i].position.y;
+            float z = particles[i].position.z;
 
-        attractor.update(dt);
+            float dx = sigma * (y - x);
+            float dy = x * (rho - z) - y;
+            float dz = x * y - beta * z;
 
-        particle.setPosition(
-            windowWidth / 2 + attractor.x * 9,
-            windowHeight / 2 - attractor.y * 9
-        );
+            // Update 
+            particles[i].position.x += dx * 0.001f;
+            particles[i].position.y += dy * 0.001f;
+            particles[i].position.z += dz * 0.001f;
 
-        elapsedTime += dt;
-
-        if (elapsedTime >= trailInterval) {
-            trail.push_front(particle.getPosition());
-            elapsedTime = 0.0f; // Reset the elapsed time
+            // Append the current position to the path
+            particles[i].path.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18), particles[i].color));
         }
 
+        // Draw
         window.clear();
 
-        // Draw the trail
-        for (const auto& point : trail) {
-            particle.setPosition(point);
-            window.draw(particle);
+        // Draw the paths
+        for (int i = 0; i < numParticles; ++i) {
+            window.draw(particles[i].path);
+        }
+
+        // Draw the current positions
+        for (int i = 0; i < numParticles; ++i) {
+            sf::CircleShape circle(1.0f);
+            circle.setPosition(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18);
+            circle.setFillColor(particles[i].color);
+            window.draw(circle);
         }
 
         window.display();
