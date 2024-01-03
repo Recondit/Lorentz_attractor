@@ -5,13 +5,21 @@ float sigma = 10.0;
 float rho = 28.0;
 float beta = 8.0 / 3.0;
 
+
+struct Pendulum {
+    float length;
+    float angle;
+    float angularVelocity;
+    float damping;
+};
+
 struct Particle {
     sf::Vector3f position;
     sf::Color color;
     sf::VertexArray path;
 };
 
-int main() {
+void LorentzAttractor(){
     // Create a window
     const int windowWidth = 1600;
     const int windowHeight = 900;
@@ -78,6 +86,56 @@ int main() {
 
         window.display();
     }
+}
 
+
+void DoublePendulum() {
+     // Create a window
+    const int windowWidth = 1600;
+    const int windowHeight = 900;
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
+    // Create bob
+    Pendulum bob = {150.0f, 2.0f, 0.0f , 0.01f};
+
+   
+
+    // Main loop
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed){
+                window.close();
+            }
+        }
+        // Update
+        bob.angularVelocity += (-9.8 / bob.length * std::sin(bob.angle) - bob.damping * bob.angularVelocity) * 0.01f;
+        bob.angle += bob.angularVelocity * 0.01f;
+        printf("%f\n", bob.angle);
+        printf("%f\n", bob.angularVelocity);
+
+
+
+
+
+
+
+        // Draw
+        window.clear();
+        sf::Vector2f bobPosition = sf::Vector2f(bob.length * std::sin(bob.angle) , bob.length * std::cos(bob.angle));
+        sf::CircleShape ball(20.0f);
+        ball.setPosition(windowWidth/2 + bobPosition.x, windowHeight/2 + bobPosition.y);
+        ball.setFillColor(sf::Color::Red);
+        window.draw(ball);
+        window.display();
+    }
+
+
+}
+
+int main() {
+    DoublePendulum();
+    // LorentzAttractor();
     return 0;
 }
+
+
