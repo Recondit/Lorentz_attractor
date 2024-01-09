@@ -19,6 +19,15 @@ struct Particle {
     sf::VertexArray path;
 };
 
+sf::Color randColor(float x , float y , float z){
+    float dist = (x*x + y*y + z*z)/(3*(70*70));
+    sf::Vector3f color1 = sf::Vector3f(255 , 0 , 0);
+    sf::Vector3f color2 = sf::Vector3f(0 , 255 , 255);
+
+    sf::Vector3f color = color1 + dist*(color2 - color1);
+    return sf::Color(color.x , color.y , color.z);
+}
+
 void LorentzAttractor(){
     // Create a window
     const int windowWidth = 1600;
@@ -26,8 +35,9 @@ void LorentzAttractor(){
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
 
     // Create particles
-    const int numParticles = 100; // Adjust the number of particles as needed
+    const int numParticles = 1000; // Adjust the number of particles as needed
     std::vector<Particle> particles(numParticles);
+    const int remove = 60;
 
     // Initialize particles with different initial positions and create their paths
     for (int i = 0; i < numParticles; ++i) {
@@ -35,7 +45,7 @@ void LorentzAttractor(){
         particles[i].position.y = static_cast<float>(rand() % 75 - 5);
         particles[i].position.z = static_cast<float>(rand() % 75 - 5);
 
-        particles[i].color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
+        particles[i].color = randColor(particles[i].position.x , particles[i].position.y , particles[i].position.z);
 
         particles[i].path.setPrimitiveType(sf::LineStrip);
         particles[i].path.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18), particles[i].color));
@@ -84,9 +94,30 @@ void LorentzAttractor(){
             window.draw(circle);
         }
 
+        for (int i = 0; i < numParticles; ++i) {
+            int r = rand() % 5;
+
+            if (particles[i].path.getVertexCount() > 2*remove){
+            sf::VertexArray copy(sf::LineStrip, particles[i].path.getVertexCount() - r);
+            for (int j = r; j < particles[i].path.getVertexCount(); ++j) {
+                        copy[j-r] = particles[i].path[j];
+            }
+            particles[i].path = copy;
+            }
+
+            
+
+
+            particles[i].path.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18), particles[i].color));
+        }
         window.display();
     }
 }
+
+
+
+
+
 
 
 void DoublePendulum() {
@@ -95,7 +126,7 @@ void DoublePendulum() {
     const int windowHeight = 900;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
     // Create bob
-    Pendulum bob = {150.0f, 2.0f, 0.0f , 0.01f};
+    Pendulum bob = {150.0f, 2.0f, 0.0f , 0.001f};
 
    
 
@@ -133,8 +164,8 @@ void DoublePendulum() {
 }
 
 int main() {
-    DoublePendulum();
-    // LorentzAttractor();
+    // DoublePendulum();
+    LorentzAttractor();
     return 0;
 }
 
