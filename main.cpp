@@ -132,7 +132,7 @@ void LorentzAttractor(){
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
 
     // Create particles
-    const int numParticles = 200; // Adjust the number of particles as needed
+    const int numParticles = 1000; // Adjust the number of particles as needed
     std::vector<Particle> particles(numParticles);
     const int remove = 60; // Higher value means longer paths
 
@@ -281,7 +281,13 @@ void DoublePendulum() {
 
     // Create a vertex array for the pendulum path
     sf::VertexArray path1(sf::LineStrip);
+    sf::VertexArray string1(sf::LineStrip);
     sf::VertexArray path2(sf::LineStrip);
+    sf::VertexArray string2(sf::LineStrip);
+
+    // Define two points for the line
+    sf::Vector2f center(windowWidth/2.0f, windowHeight/2.0f);
+
 
     // Main loop
     while (window.isOpen()) {
@@ -291,6 +297,11 @@ void DoublePendulum() {
                 window.close();
         }
 
+        sf::VertexArray line1(sf::Lines, 2);
+        sf::VertexArray line2(sf::Lines, 2);
+        line1[0].position = center;
+    
+
         // Update pendulum state
         update(theta1, theta2, omega1, omega2, 0.01, l1, l2, m1, m2);
 
@@ -298,11 +309,19 @@ void DoublePendulum() {
         path1.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1)), sf::Color::Red));
         path2.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2)), sf::Color::Green));
 
+        line1[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
+
+        line2[0].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
+        line2[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2));
+
         // Draw
         window.clear();
 
+
         // Draw the paths
         window.draw(path1);
+        window.draw(line1);
+        window.draw(line2);
         window.draw(path2);
 
         // Draw the pendulum bobs
@@ -322,8 +341,8 @@ void DoublePendulum() {
 }
 
 int main() {
-    // DoublePendulum();
-    LorentzAttractor();
+    DoublePendulum();
+    // LorentzAttractor(); 
     // SimpleLorentzAttractor();
     return 0;
 }
