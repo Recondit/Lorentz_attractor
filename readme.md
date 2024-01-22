@@ -62,15 +62,15 @@ The angular positions of the two pendulums are denoted by θ₁ and θ₂, while
 The equations are given by:
 
 1. For the first pendulum:
-   $$ \dot{\omega}_1 = -\frac{g \cdot (2 \cdot m_1 + m_2) \cdot \sin(\theta_1) + m_2 \cdot g \cdot \sin(\theta_1 - 2 \cdot \theta_2) - 2 \cdot \sin(\theta_1 - \theta_2) \cdot m_2 \cdot \left( \omega_2^2 \cdot l_2 + \omega_1^2 \cdot l_1 \cdot \cos(\theta_1 - \theta_2) \right)}{l_1 \cdot (2 \cdot m_1 + m_2 - m_2 \cdot \cos(2 \cdot (\theta_1 - \theta_2)))} $$
+   $$\dot{\omega}_1 = -\frac{g \cdot (2 \cdot m_1 + m_2) \cdot \sin(\theta_1) + m_2 \cdot g \cdot \sin(\theta_1 - 2 \cdot \theta_2) - 2 \cdot \sin(\theta_1 - \theta_2) \cdot m_2 \cdot \left( \omega_2^2 \cdot l_2 + \omega_1^2 \cdot l_1 \cdot \cos(\theta_1 - \theta_2) \right)}{l_1 \cdot (2 \cdot m_1 + m_2 - m_2 \cdot \cos(2 \cdot (\theta_1 - \theta_2)))}$$
 
    $$\dot{\theta}_1 = \omega_1$$
    
 
 2. For the second pendulum:
-   $$ \dot{\omega}_2 = \frac{2 \cdot \sin(\theta_1 - \theta_2) \cdot \left( \omega_1^2 \cdot l_1 \cdot (m_1 + m_2) + g \cdot (m_1 + m_2) \cdot \cos(\theta_1) + \omega_2^2 \cdot l_2 \cdot m_2 \cdot \cos(\theta_1 - \theta_2) \right)}{l_2 \cdot (2 \cdot m_1 + m_2 - m_2 \cdot \cos(2 \cdot (\theta_1 - \theta_2)))} $$
+   $$\dot{\omega}_2 = \frac{2 \cdot \sin(\theta_1 - \theta_2) \cdot \left( \omega_1^2 \cdot l_1 \cdot (m_1 + m_2) + g \cdot (m_1 + m_2) \cdot \cos(\theta_1) + \omega_2^2 \cdot l_2 \cdot m_2 \cdot \cos(\theta_1 - \theta_2) \right)}{l_2 \cdot (2 \cdot m_1 + m_2 - m_2 \cdot \cos(2 \cdot (\theta_1 - \theta_2)))}$$
 
-   $$ \dot{\theta}_2 = \omega_2 $$
+   $$\dot{\theta}_2 = \omega_2$$
 
 These ODE's can easily be solved using the Runge-Kutta method
 
