@@ -75,7 +75,7 @@ The equations are given by:
 These ODE's can easily be solved using the Runge-Kutta method
 
 ### Visual
-![Alt text](assets/DoublePendulum.gif)
+![](DoublePendulum.gif)
 
 ## Prerequisites
 
