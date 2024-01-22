@@ -23,7 +23,7 @@ struct Particle {
 sf::Color randColor(float x , float y , float z){
     float dist = (x*x + y*y + z*z)/(3*(70*70));
     sf::Vector3f color1 = sf::Vector3f(255 , 0 , 0);
-    sf::Vector3f color2 = sf::Vector3f(0 , 255 , 255);
+    sf::Vector3f color2 = sf::Vector3f(0 , 0 , 255);
 
     sf::Vector3f color = color1 + dist*(color2 - color1);
     return sf::Color(color.x , color.y , color.z);
@@ -132,7 +132,7 @@ void LorentzAttractor(){
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
 
     // Create particles
-    const int numParticles = 1000; // Adjust the number of particles as needed
+    const int numParticles = 20000; // Adjust the number of particles as needed
     std::vector<Particle> particles(numParticles);
     const int remove = 60; // Higher value means longer paths
 
@@ -174,9 +174,9 @@ void LorentzAttractor(){
             float dz = x * y - particles[i].Constant.z * z;
 
             // Update 
-            particles[i].position.x += dx * 0.001f;
-            particles[i].position.y += dy * 0.001f;
-            particles[i].position.z += dz * 0.001f;
+            particles[i].position.x += dx * 0.01f;
+            particles[i].position.y += dy * 0.01f;
+            particles[i].position.z += dz * 0.01f;
 
             // Append the current position to the path
             particles[i].path.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + particles[i].position.x * 18, windowHeight / 2 - particles[i].position.y * 18), particles[i].color));
