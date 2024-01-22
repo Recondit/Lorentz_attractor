@@ -51,8 +51,8 @@ This program uses SFML to visualize the simulation. It generates a specified num
 - **Variable Parameters**: Random factors are introduced to the parameters of the Lorenz equations for each particle, adding variability to the simulation.
 
 ### Visual
-![Alt text](assets/LorentzgifSimple.gif)
-![Alt text](assets/LorentzgifComp.gif)
+![](LorentzgifSimple.gif)
+![](LorentzgifComp.gif)
 ## Double Pendulum
 A double pendulum consists of two point masses connected by massless rigid rods. The motion of such a system can be described using a set of coupled second-order ordinary differential equations.
 
