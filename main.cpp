@@ -6,11 +6,20 @@ float rho = 28.0;
 float beta = 8.0 / 3.0;
 
 
-struct Pendulum {
-    float length;
-    float angle;
-    float angularVelocity;
-    float damping;
+struct Bob {
+    double theta1;  // initial angle of the first pendulum
+    double theta2;  // initial angle of the second pendulum
+    double omega1;         // initial angular velocity of the first pendulum
+    double omega2;         // initial angular velocity of the second pendulum
+    double l1;           // length of the first pendulum arm
+    double l2;           // length of the second pendulum arm
+    double m1;            // mass of the first bob
+    double m2;
+
+    sf::Color color;  // color of the pendulum
+
+
+
 };
 
 struct Particle {
@@ -132,7 +141,7 @@ void LorentzAttractor(){
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Lorentz Attractor");
 
     // Create particles
-    const int numParticles = 20000; // Adjust the number of particles as needed
+    const int numParticles = 200; // Adjust the number of particles as needed
     std::vector<Particle> particles(numParticles);
     const int remove = 60; // Higher value means longer paths
 
@@ -269,21 +278,27 @@ void DoublePendulum() {
     const int windowHeight = 600;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Double Pendulum");
 
-    // Pendulum parameters
-    double theta1 = 3.14 / 2.0;  // initial angle of the first pendulum
-    double theta2 = 3.14 / 2.0;  // initial angle of the second pendulum
-    double omega1 = 0.0;         // initial angular velocity of the first pendulum
-    double omega2 = 0.0;         // initial angular velocity of the second pendulum
-    double l1 = 150.0;           // length of the first pendulum arm
-    double l2 = 150.0;           // length of the second pendulum arm
-    double m1 = 10.0;            // mass of the first bob
-    double m2 = 10.0;            // mass of the second bob
+    const int numBobs = 10; // Adjust the number of particles as needed
+    std::vector<Bob> pendulum(numBobs);
+
+    for (int i = 0; i < numBobs; ++i) {
+        pendulum[i].theta1 = 3.14159/2.0;
+        pendulum[i].theta2 = 3.14159/2.0;
+        pendulum[i].omega1 = 0.0;
+        pendulum[i].omega2 = 0.0;
+        pendulum[i].l1 = 100.0;
+        pendulum[i].l2 = 100.0;
+        pendulum[i].m1 = 10.0 + i*0.1;
+        pendulum[i].m2 = 10.0 + i*0.1;
+
+        pendulum[i].color = randColor(rand() % 255 , rand() % 255  , rand() % 255 );
+    }
 
     // Create a vertex array for the pendulum path
-    sf::VertexArray path1(sf::LineStrip);
-    sf::VertexArray string1(sf::LineStrip);
-    sf::VertexArray path2(sf::LineStrip);
-    sf::VertexArray string2(sf::LineStrip);
+    // sf::VertexArray path1(sf::LineStrip);
+    // sf::VertexArray string1(sf::LineStrip);
+    // sf::VertexArray path2(sf::LineStrip);
+    // sf::VertexArray string2(sf::LineStrip);
 
     // Define two points for the line
     sf::Vector2f center(windowWidth/2.0f, windowHeight/2.0f);
@@ -297,43 +312,71 @@ void DoublePendulum() {
                 window.close();
         }
 
-        sf::VertexArray line1(sf::Lines, 2);
-        sf::VertexArray line2(sf::Lines, 2);
-        line1[0].position = center;
+        // sf::VertexArray line1(sf::Lines, 2);
+        // sf::VertexArray line2(sf::Lines, 2);
+        // line1[0].position = center;
     
 
         // Update pendulum state
-        update(theta1, theta2, omega1, omega2, 0.01, l1, l2, m1, m2);
+        for(int i = 0; i < numBobs; ++i){
+            update(pendulum[i].theta1, pendulum[i].theta2, pendulum[i].omega1, pendulum[i].omega2, 0.01, pendulum[i].l1, pendulum[i].l2, pendulum[i].m1, pendulum[i].m2);
+        }
 
         // Append the current position to the paths
-        path1.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1)), sf::Color::Red));
-        path2.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2)), sf::Color::Green));
+        // path1.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1)), sf::Color::Red));
+        // path2.append(sf::Vertex(sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2)), sf::Color::Green));
 
-        line1[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
+        // line1[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
 
-        line2[0].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
-        line2[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2));
+        // line2[0].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1), windowHeight / 2 + l1 * std::cos(theta1));
+        // line2[1].position = sf::Vector2f(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2), windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2));
 
         // Draw
         window.clear();
 
 
         // Draw the paths
-        window.draw(path1);
-        window.draw(line1);
-        window.draw(line2);
-        window.draw(path2);
+        // window.draw(path1);
+        // window.draw(line1);
+        // window.draw(line2);
+        // window.draw(path2);
 
         // Draw the pendulum bobs
-        sf::CircleShape bob1(m1);
-        bob1.setPosition(windowWidth / 2 + l1 * std::sin(theta1) - m1, windowHeight / 2 + l1 * std::cos(theta1) - m1);
-        bob1.setFillColor(sf::Color::Red);
-        window.draw(bob1);
+        for(int i = 0; i<numBobs; ++i){
+            sf::VertexArray line1(sf::Lines, 2);
+            sf::VertexArray line2(sf::Lines, 2); 
 
-        sf::CircleShape bob2(m2);
-        bob2.setPosition(windowWidth / 2 + l1 * std::sin(theta1) + l2 * std::sin(theta2) - m2, windowHeight / 2 + l1 * std::cos(theta1) + l2 * std::cos(theta2) - m2);
-        bob2.setFillColor(sf::Color::Green);
-        window.draw(bob2);
+
+            
+            line1[0].position = center;
+            line1[1].position = sf::Vector2f(windowWidth / 2 + pendulum[i].l1 * std::sin(pendulum[i].theta1), windowHeight / 2 + pendulum[i].l1 * std::cos(pendulum[i].theta1));
+        
+            line2[0].position = sf::Vector2f(windowWidth / 2 + pendulum[i].l1 * std::sin(pendulum[i].theta1), windowHeight / 2 + pendulum[i].l1 * std::cos(pendulum[i].theta1));
+            line2[1].position = sf::Vector2f(windowWidth / 2 + pendulum[i].l1 * std::sin(pendulum[i].theta1) + pendulum[i].l2 * std::sin(pendulum[i].theta2), windowHeight / 2 + pendulum[i].l1 * std::cos(pendulum[i].theta1) + pendulum[i].l2 * std::cos(pendulum[i].theta2));
+
+            line1[0].color = pendulum[i].color;
+            line1[1].color = pendulum[i].color;
+            line2[0].color = pendulum[i].color;
+            line2[1].color = pendulum[i].color;
+            
+
+            sf::CircleShape bob1(12.0);
+            bob1.setPosition(windowWidth / 2 + pendulum[i].l1 * std::sin(pendulum[i].theta1) - pendulum[i].m1, windowHeight / 2 + pendulum[i].l1 * std::cos(pendulum[i].theta1) - pendulum[i].m1);
+            bob1.setFillColor(pendulum[i].color);
+            window.draw(bob1);
+
+            sf::CircleShape bob2(12.0);
+            bob2.setPosition(windowWidth / 2 + pendulum[i].l1 * std::sin(pendulum[i].theta1) + pendulum[i].l2 * std::sin(pendulum[i].theta2) - pendulum[i].m2, windowHeight / 2 + pendulum[i].l1 * std::cos(pendulum[i].theta1) + pendulum[i].l2 * std::cos(pendulum[i].theta2) - pendulum[i].m2);
+            bob2.setFillColor(pendulum[i].color);
+            window.draw(bob2);
+
+
+        
+        window.draw(line1);
+        window.draw(line2);
+        
+        }
+        
 
         window.display();
     }
