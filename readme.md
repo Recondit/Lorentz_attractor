@@ -13,7 +13,6 @@ The saying 'A butterfly flapping its wings in the Amazon can cause rain in the S
 - [Double Pendulum](#double-pendulum)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [License](#license)
 
 ## Introduction
 
