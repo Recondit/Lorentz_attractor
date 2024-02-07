@@ -291,7 +291,7 @@ void DoublePendulum() {
     const int windowHeight = 600;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Double Pendulum");
 
-    const int numBobs = 40; // Adjust the number of particles as needed
+    const int numBobs = 5; // Adjust the number of particles as needed
     std::vector<Bob> pendulum(numBobs);
     std::vector<sf::Color> colors = rainbowGradientColor(numBobs);
 
@@ -398,9 +398,13 @@ void DoublePendulum() {
 }
 
 int main() {
-    DoublePendulum();
-    // LorentzAttractor(); 
-    // SimpleLorentzAttractor();
+    printf("Press 1 for Double Pendulum, 2 for Lorentz Attractor, 3 for Simple Lorentz Attractor\n");
+    int choice;
+    scanf("%d", &choice);
+    if (choice == 1) DoublePendulum();
+    else if (choice == 2) LorentzAttractor();
+    else if (choice == 3) SimpleLorentzAttractor();
+    else printf("Invalid choice\n");
     return 0;
 }
 
