@@ -4,16 +4,15 @@ The saying 'A butterfly flapping its wings in the Amazon can cause rain in the S
 
 ![](LorentzgifSimple.gif)
 ![](LorentzgifComp.gif)
-![](DoublePendulum.gif)
 ![](doublependulummul.gif)
 
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Lorentz Attractor](#lorentz-attractor)
+- [Double Pendulum](#double-pendulum)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Lorentz Attractor](#lorentz)
-- [Double Pendulum](#)
 - [License](#license)
 
 ## Introduction
