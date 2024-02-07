@@ -38,6 +38,19 @@ sf::Color randColor(float x , float y , float z){
     return sf::Color(color.x , color.y , color.z);
 }
 
+std::vector<sf::Color> rainbowGradientColor(int num){
+    std::vector<sf::Color> colors;
+    for (int i = 0; i < num; ++i) {
+        float dist = i/(num-1.0);
+        sf::Vector3f color1 = sf::Vector3f(255 , 0 , 0);
+        sf::Vector3f color2 = sf::Vector3f(0 , 0 , 255);
+
+        sf::Vector3f color = color1 + dist*(color2 - color1);
+        colors.push_back(sf::Color(color.x , color.y , color.z));
+    }
+    return colors;
+}
+
 void SimpleLorentzAttractor(){
     // Create a window
     const int windowWidth = 1600;
@@ -278,8 +291,9 @@ void DoublePendulum() {
     const int windowHeight = 600;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Double Pendulum");
 
-    const int numBobs = 10; // Adjust the number of particles as needed
+    const int numBobs = 40; // Adjust the number of particles as needed
     std::vector<Bob> pendulum(numBobs);
+    std::vector<sf::Color> colors = rainbowGradientColor(numBobs);
 
     for (int i = 0; i < numBobs; ++i) {
         pendulum[i].theta1 = 3.14159/2.0;
@@ -291,7 +305,7 @@ void DoublePendulum() {
         pendulum[i].m1 = 10.0 + i*0.1;
         pendulum[i].m2 = 10.0 + i*0.1;
 
-        pendulum[i].color = randColor(rand() % 255 , rand() % 255  , rand() % 255 );
+        pendulum[i].color = colors[i];
     }
 
     // Create a vertex array for the pendulum path

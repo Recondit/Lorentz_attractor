@@ -76,6 +76,7 @@ These ODE's can easily be solved using the Runge-Kutta method
 
 ### Visual
 ![](DoublePendulum.gif)
+![](doublependulummul.gif)
 
 ## Prerequisites
 
