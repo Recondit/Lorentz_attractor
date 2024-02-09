@@ -1,4 +1,4 @@
-# Lorentz Attractor Simulation with SFML
+# Chaos Theory Simulations with SFML
 
 The saying 'A butterfly flapping its wings in the Amazon can cause rain in the Sahara' eloquently encapsulates the Butterfly Effect, a captivating concept within Chaos Theory. This project serves as a simulation of the renowned Lorenz Attractor, a peculiar strange attractor, and delves into another intriguing experiment—the double pendulum. Leveraging the SFML library, it meticulously visualizes the trajectories of numerous particles and pendulum bobs within a 2D space. By doing so, it brings to life the idea that seemingly minor actions can unfold into significant and unpredictable outcomes.
 
